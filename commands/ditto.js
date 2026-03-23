@@ -16,7 +16,7 @@ module.exports = {
 				.setRequired(true)),
 
     async execute(interaction) {
-        await interaction.reply({ content: 'Ditto use Transform!', ephemeral: true });
+        await interaction.reply({ content: 'Ditto used Transform!', ephemeral: true });
 
 		const target = interaction.options.getUser('target');
         let targetInGuild;
