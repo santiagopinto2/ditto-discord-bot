@@ -1,4 +1,4 @@
-const { Client, Collection, Events, GatewayIntentBits, ActivityType } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, ActivityType, MessageFlags } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 require('dotenv').config();
@@ -20,7 +20,7 @@ for(const file of commandFiles) {
 }
 
 
-client.once('ready', () => {
+client.once(Events.ClientReady, () => {
     console.log('Bot is online');
     client.user.setPresence({
         activities: [{ name: 'with Misty', type: ActivityType.Playing }],
@@ -42,7 +42,9 @@ client.on(Events.InteractionCreate, async interaction => {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		const reply = { content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral };
+		if (interaction.replied || interaction.deferred) await interaction.followUp(reply).catch(console.error);
+		else await interaction.reply(reply).catch(console.error);
 	}
 });
 
